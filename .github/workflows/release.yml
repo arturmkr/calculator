@@ -20,11 +20,11 @@ jobs:
 
     - name: Create calculator folder, move files, and add __init__.py
       run: |
-        mkdir calculator
-        touch calculator/__init__.py
-        mv calculator.py calculator/
-        mv printer calculator/
-        touch calculator/printer/__init__.py
+        mkdir counter
+        touch counter/__init__.py
+        mv calculator.py counter/
+        mv printer counter/
+        touch counter/printer/__init__.py
 
     - name: Archive restructured files
       run: |

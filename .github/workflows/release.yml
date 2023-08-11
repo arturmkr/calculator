@@ -27,13 +27,22 @@ jobs:
       run: |
         zip -r calculator.zip calculator
 
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: calculator-artifact
+        path: calculator.zip
+
   release:
     needs: restructure
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: calculator-artifact
+        path: .
 
     - name: Create Release
       id: create_release

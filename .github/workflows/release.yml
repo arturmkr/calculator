@@ -23,12 +23,22 @@ jobs:
         mv printer calculator/
         touch calculator/printer/__init__.py
 
+    - name: Archive restructured files
+      run: |
+        zip -r calculator.zip calculator
+
+  release:
+    needs: restructure
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ github.event.inputs.release-version }}
         release_name: ${{ github.event.inputs.release-version }}
@@ -38,3 +48,13 @@ jobs:
           - Second Change
         draft: false
         prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./calculator.zip
+        asset_name: calculator.zip
+        asset_content_type: application/zip

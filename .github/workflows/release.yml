@@ -1,0 +1,39 @@
+name: Release Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        required: true
+        description: Specify release version
+
+jobs:
+  restructure:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Create calculator folder, move files, and add __init__.py
+      run: |
+        mkdir calculator
+        touch calculator/__init__.py
+        mv calculator.py calculator/
+        mv printer calculator/
+        touch calculator/printer/__init__.py
+
+  release:
+    needs: restructure
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Create Release
+      uses: gh-actions/github-release@master
+      with:
+        tag: ${{ github.event.inputs.release-version }}
+        title: Release ${{ github.event.inputs.release-version }}
+        note: Release notes for ${{ github.event.inputs.release-version }}
+        draft: false
+        prerelease: false
